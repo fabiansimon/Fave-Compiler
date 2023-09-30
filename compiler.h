@@ -5,6 +5,11 @@
 #ifndef FAVE_CUH_COMPILER_H
 #define FAVE_CUH_COMPILER_H
 
-void compile(const char* src);
+#include <stdbool.h>
+
+#include "chunk.h"
+#include "vm.h"
+
+bool compile(const char* src, Chunk* chunk);
 
 #endif //FAVE_CUH_COMPILER_H
