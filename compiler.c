@@ -9,6 +9,10 @@
 #include "common.h"
 #include "scanner.h"
 
+#ifdef DEBUG_PRINT_CODE
+#include "debug.h"
+#endif
+
 typedef struct {
     Token curr;
     Token prev;
@@ -117,6 +121,9 @@ static void emit_constant(Value val) {
 
 static void end_compiler() {
     emit_return();
+    #ifdef DEBUG_PRINT_CODE
+    if (!parser.had_error) disassemble_chunk(get_current_chunk(), "code");
+    #endif
 }
 
 static void expression();
@@ -148,6 +155,7 @@ static void grouping() {
 
 static void number() {
     double val = strtod(parser.prev.start, NULL);
+    emit_constant(val);
 }
 
 static void unary() {
@@ -162,7 +170,6 @@ static void unary() {
         default: return; // unreachable
     }
 }
-
 
 ParseRule rules[] = {
         [TOKEN_LEFT_PAREN]    = {grouping, NULL,   PREC_NONE},
@@ -217,7 +224,7 @@ static void parse_precedence(Precedence precedence) {
 
     prefix_rule();
 
-    while (precedence <= get_rule(parser.prev.type)->precedence) {
+    while (precedence <= get_rule(parser.curr.type)->precedence) {
         advance();
         ParseFn infix_rule = get_rule(parser.prev.type)->infix;
         infix_rule();
