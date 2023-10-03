@@ -29,13 +29,14 @@ void free_value_array(ValueArray* arr) {
     init_value_array(arr);
 }
 
-void print_value(Value value) {
-    switch (value.type) {
+void print_value(Value val) {
+    switch (val.type) {
         case VAL_BOOL:
-            printf(AS_BOOL(value) ? "true" : "false");
+            printf(AS_BOOL(val) ? "true" : "false");
             break;
         case VAL_NIL: printf("NIL"); break;
-        case VAL_NUMBER: printf("%g", AS_NUMBER(value)); break;
+        case VAL_NUMBER: printf("%g", AS_NUMBER(val)); break;
+        case VAL_OBJ: print_object(val); break;
     }
 }
 
