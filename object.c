@@ -17,6 +17,9 @@
 static Obj* allocate_object(size_t size, ObjType type) {
     Obj* object = (Obj*) reallocate(NULL, 0, size);
     object->type = type;
+    object->next = vm.objects;
+    vm.objects = object;
+
     return object;
 }
 
@@ -27,11 +30,15 @@ static ObjString* allocate_string(char* chars, int length) {
     return string;
 }
 
-ObjString* copy_string(const char* chars, int lenght) {
-    char* heap_chars = ALLOCATE(char, lenght+1);
-    memcpy(heap_chars, chars, lenght);
-    heap_chars[lenght] = '\0';
-    return allocate_string(heap_chars, lenght);
+ObjString* take_string(const char* chars, int length) {
+    return allocate_string(chars, length);
+}
+
+ObjString* copy_string(const char* chars, int length) {
+    char* heap_chars = ALLOCATE(char, length + 1);
+    memcpy(heap_chars, chars, length);
+    heap_chars[length] = '\0';
+    return allocate_string(heap_chars, length);
 }
 
 void print_object(Value val) {

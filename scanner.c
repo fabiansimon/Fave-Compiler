@@ -52,7 +52,7 @@ static Token generate_token(TokenType type) {
     token.type = type;
     token.start = scanner.start;
     token.length = (int)(scanner.curr - scanner.start);
-    token.length = scanner.line;
+    token.line = scanner.line;
     return token;
 }
 
