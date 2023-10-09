@@ -103,6 +103,12 @@ build CMakeFiles/FAVE_CUH.dir/object.c.o: C_COMPILER__FAVE_CUH_unscanned_Debug /
   OBJECT_DIR = CMakeFiles/FAVE_CUH.dir
   OBJECT_FILE_DIR = CMakeFiles/FAVE_CUH.dir
 
+build CMakeFiles/FAVE_CUH.dir/table.c.o: C_COMPILER__FAVE_CUH_unscanned_Debug /Users/fabiansimon/Developer/FAVE_CUH/table.c || cmake_object_order_depends_target_FAVE_CUH
+  DEP_FILE = CMakeFiles/FAVE_CUH.dir/table.c.o.d
+  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -fcolor-diagnostics
+  OBJECT_DIR = CMakeFiles/FAVE_CUH.dir
+  OBJECT_FILE_DIR = CMakeFiles/FAVE_CUH.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target FAVE_CUH
@@ -111,7 +117,7 @@ build CMakeFiles/FAVE_CUH.dir/object.c.o: C_COMPILER__FAVE_CUH_unscanned_Debug /
 #############################################
 # Link the executable FAVE_CUH
 
-build FAVE_CUH: C_EXECUTABLE_LINKER__FAVE_CUH_Debug CMakeFiles/FAVE_CUH.dir/main.c.o CMakeFiles/FAVE_CUH.dir/chunk.c.o CMakeFiles/FAVE_CUH.dir/memory.c.o CMakeFiles/FAVE_CUH.dir/debug.c.o CMakeFiles/FAVE_CUH.dir/value.c.o CMakeFiles/FAVE_CUH.dir/vm.c.o CMakeFiles/FAVE_CUH.dir/compiler.c.o CMakeFiles/FAVE_CUH.dir/scanner.c.o CMakeFiles/FAVE_CUH.dir/object.c.o
+build FAVE_CUH: C_EXECUTABLE_LINKER__FAVE_CUH_Debug CMakeFiles/FAVE_CUH.dir/main.c.o CMakeFiles/FAVE_CUH.dir/chunk.c.o CMakeFiles/FAVE_CUH.dir/memory.c.o CMakeFiles/FAVE_CUH.dir/debug.c.o CMakeFiles/FAVE_CUH.dir/value.c.o CMakeFiles/FAVE_CUH.dir/vm.c.o CMakeFiles/FAVE_CUH.dir/compiler.c.o CMakeFiles/FAVE_CUH.dir/scanner.c.o CMakeFiles/FAVE_CUH.dir/object.c.o CMakeFiles/FAVE_CUH.dir/table.c.o
   FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk
   OBJECT_DIR = CMakeFiles/FAVE_CUH.dir
   POST_BUILD = :

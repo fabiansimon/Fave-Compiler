@@ -45,16 +45,10 @@ void print_value(Value val) {
 bool values_equal(Value a, Value b) {
     if (a.type != b.type) return false;
     switch (a.type) {
-        case VAL_BOOL:   return AS_BOOL(a) == AS_BOOL(b);
-        case VAL_NIL:    return true;
-        case VAL_NUMBER: return AS_NUMBER(a) == AS_NUMBER(b);
-        case VAL_OBJ: {
-            ObjString* string_a = AS_STRING(a);
-            ObjString* string_b = AS_STRING(b);
-            return (string_a->length == string_b->length) &&
-                    memcmp(string_a->chars, string_b->chars, string_a->length) == 0;
-
-        }
-        default:         return false; // unreachable.
+        case VAL_BOOL:      return AS_BOOL(a) == AS_BOOL(b);
+        case VAL_NIL:       return true;
+        case VAL_NUMBER:    return AS_NUMBER(a) == AS_NUMBER(b);
+        case VAL_OBJ:       return AS_OBJ(a) == AS_OBJ(b);
+        default:            return false; // unreachable.
     }
 }
