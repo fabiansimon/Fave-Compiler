@@ -192,7 +192,6 @@ static void variable_declaration() {
     uint8_t global = parse_variable("Expect variable name");
 
     if (is_match(TOKEN_EQUAL)) {
-        not
         expression();
     } else {
         emit_byte(OP_NIL);
