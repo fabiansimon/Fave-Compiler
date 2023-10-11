@@ -98,6 +98,8 @@ static TokenType check_keyword(int start, int length, const char* rest, TokenTyp
     return TOKEN_IDENTIFIER;
 }
 
+// d
+
 static TokenType get_identifier_type() {
     switch (scanner.start[0]) {
         case 'a': return check_keyword(1, 2, "nd", TOKEN_AND);
@@ -128,6 +130,9 @@ static TokenType get_identifier_type() {
         case 'v': return check_keyword(1, 2, "ar", TOKEN_VAR);
         case 'w': return check_keyword(1, 4, "hile", TOKEN_WHILE);
     }
+
+
+    return TOKEN_IDENTIFIER;
 }
 
 static bool is_digit(char c) {
