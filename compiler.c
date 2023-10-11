@@ -276,10 +276,8 @@ static void named_variable(Token name, bool can_assign) {
         expression();
         emit_bytes(OP_SET_GLOBAL, arg);
     } else {
-        emit_bytes(OP_SET_GLOBAL, arg);
+        emit_bytes(OP_GET_GLOBAL, arg);
     }
-
-    emit_bytes(OP_GET_GLOBAL, arg);
 }
 
 static void variable(bool can_assign) {
