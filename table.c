@@ -35,7 +35,9 @@ static Entry* find_entry(Entry* entries, int capacity, ObjString* key) {
             } else {
                 if (tombstone == NULL) tombstone = entry;
             }
-        } else if (entry->key == key) return entry;
+        } else if (entry->key == key) {
+            return entry;
+        }
 
         idx = (idx+1) % capacity;
     }
@@ -118,9 +120,11 @@ ObjString* table_find_string(Table* table, const char* chars, int length, uint32
         Entry* entry = &table->entries[idx];
         if (entry->key == NULL) {
             if (IS_NIL(entry->val)) return NULL; // Empty non-tombstone entry
-        } else if (entry->key->length == length
-                    && entry->key->hash == hash
-                   && memcmp(entry->key->chars, chars, length) == 0) return entry->key;
+        } else if (entry->key->length == length &&
+                    entry->key->hash == hash &&
+                    memcmp(entry->key->chars, chars, length) == 0) {
+            return entry->key;
+        }
 
         idx = (idx+1) % table->capacity;
     }
