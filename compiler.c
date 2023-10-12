@@ -42,7 +42,19 @@ typedef struct {
     Precedence precedence;
 } ParseRule;
 
+typedef struct {
+    Token name;
+    int depth;
+} Local;
+
+typedef struct {
+    Local locals[UINT8_COUNT];
+    int local_count;
+    int scope_depth;
+} Compiler;
+
 Parser parser;
+Compiler* current = NULL;
 Chunk* compiling_chunk;
 
 static Chunk* get_current_chunk() {
@@ -129,11 +141,25 @@ static void emit_constant(Value val) {
     emit_bytes(OP_CONSTANT, make_constant(val));
 }
 
+static void init_compiler(Compiler* compiler) {
+    compiler->local_count = 0;
+    compiler->scope_depth = 0;
+    current = compiler;
+}
+
 static void end_compiler() {
     emit_return();
     #ifdef DEBUG_PRINT_CODE
     if (!parser.had_error) disassemble_chunk(get_current_chunk(), "code");
     #endif
+}
+
+static void begin_scope() {
+    current->scope_depth++;
+}
+
+static void end_scope() {
+    current->scope_depth--;
 }
 
 static void expression();
@@ -186,6 +212,14 @@ static void literal(bool can_assign) {
 
 static void expression() {
     parse_precedence(PREC_ASSIGNMENT);
+}
+
+static void block() {
+    while (!check(TOKEN_RIGHT_BRACE) && !check(TOKEN_EOF)) {
+        declaration();
+    }
+
+    consume(TOKEN_RIGHT_BRACE, "Expect '}' after block.");
 }
 
 static void variable_declaration() {
@@ -250,6 +284,10 @@ static void declaration() {
 static void statement() {
     if (is_match(TOKEN_PRINT)) {
         print_statement();
+    } else if (is_match(TOKEN_LEFT_BRACE)) {
+        begin_scope();
+        block();
+        end_scope();
     } else {
         expression_statement();
     }
@@ -369,6 +407,9 @@ static ParseRule* get_rule(TokenType type) {
 
 bool compile(const char* src, Chunk* chunk) {
     init_scanner(src);
+
+    Compiler compiler;
+    init_compiler(&compiler);
 
     compiling_chunk = chunk;
 
