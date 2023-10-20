@@ -12,6 +12,6 @@
 #include "object.h"
 #include "vm.h"
 
-bool compile(const char* src, Chunk* chunk);
+ObjFunction* compile(const char* src);
 
 #endif //FAVE_CUH_COMPILER_H
