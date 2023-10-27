@@ -189,7 +189,7 @@ static void init_compiler(Compiler* compiler,FunctionType type) {
     Local* local = &current->locals[current->local_count++];
     local->depth = 0;
     local->name.start = "";
-    local.name.length = 0;
+    local->name.length = 0;
 }
 
 static ObjFunction* end_compiler() {
