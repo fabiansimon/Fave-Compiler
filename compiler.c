@@ -53,7 +53,8 @@ typedef enum {
     TYPE_SCRIPT,
 } FunctionType;
 
-typedef struct {
+typedef struct Compiler {
+    struct Compiler* enclosing;
     ObjFunction* function;
     FunctionType type;
 
@@ -179,6 +180,7 @@ static void patch_jump(int offset) {
 }
 
 static void init_compiler(Compiler* compiler,FunctionType type) {
+    compiler->enclosing = current;
     compiler->function = NULL;
     compiler->type = type;
     compiler->local_count = 0;
@@ -285,6 +287,7 @@ static uint8_t parse_variable(const char* err_message) {
 }
 
 static void mark_as_initialized() {
+    if (current->scope_depth == 0) return;
     current->locals[current->local_count-1].depth = current->scope_depth;
 }
 
@@ -342,8 +345,28 @@ static void block() {
     while (!check(TOKEN_RIGHT_BRACE) && !check(TOKEN_EOF)) {
         declaration();
     }
-
     consume(TOKEN_RIGHT_BRACE, "Expect '}' after block.");
+}
+
+static void function(FunctionType type) {
+    Compiler compiler;
+    init_compiler(&compiler, type);
+    begin_scope();
+
+    consume(TOKEN_LEFT_PAREN, "Expect '(' after function name.");
+    consume(TOKEN_RIGHT_PAREN, "Expect ')' after parameters.");
+    consume(TOKEN_LEFT_BRACE, "Expect '{' before function body.");
+    block();
+
+    ObjFunction* func = end_compiler();
+    emit_bytes(OP_CONSTANT, make_constant(OBJ_VAL(func)));
+}
+
+static void function_declaration() {
+    uint8_t global = parse_variable("Expect function name");
+    mark_as_initialized();
+    function(TYPE_FUNCTION);
+    define_variable(global);
 }
 
 static void variable_declaration() {
@@ -475,7 +498,9 @@ static void synchronize() {
 }
 
 static void declaration() {
-    if (is_match(TOKEN_VAR)) {
+    if (is_match(TOKEN_FUN)) {
+        function_declaration();
+    } else if (is_match(TOKEN_VAR)) {
         variable_declaration();
     } else {
         statement();
