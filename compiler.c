@@ -179,7 +179,7 @@ static void patch_jump(int offset) {
     get_current_chunk()->code[offset+1] = jump & 0xff;
 }
 
-static void init_compiler(Compiler* compiler,FunctionType type) {
+static void init_compiler(Compiler* compiler, FunctionType type) {
     compiler->enclosing = current;
     compiler->function = NULL;
     compiler->type = type;
@@ -187,6 +187,10 @@ static void init_compiler(Compiler* compiler,FunctionType type) {
     compiler->scope_depth = 0;
     compiler->function = new_function();
     current = compiler;
+
+    if (type != TYPE_SCRIPT) {
+        current->function->name = copy_string(parser.prev.start, parser.prev.length);
+    }
 
     Local* local = &current->locals[current->local_count++];
     local->depth = 0;
@@ -204,6 +208,7 @@ static ObjFunction* end_compiler() {
                           function->name != NULL ? function->name->chars : "<script>");
     #endif
 
+    current = current->enclosing;
     return function;
 }
 
@@ -354,6 +359,18 @@ static void function(FunctionType type) {
     begin_scope();
 
     consume(TOKEN_LEFT_PAREN, "Expect '(' after function name.");
+    if (!check(TOKEN_RIGHT_PAREN)) {
+        do {
+            current->function->arity++;
+            if (current->function->arity > 255) {
+                error_at_curr("Can't have more than 255 parameters.");
+            }
+
+            uint8_t constant = parse_variable("Expect parameter name");
+            define_variable(constant);
+        } while (is_match(TOKEN_COMMA));
+    }
+
     consume(TOKEN_RIGHT_PAREN, "Expect ')' after parameters.");
     consume(TOKEN_LEFT_BRACE, "Expect '{' before function body.");
     block();
