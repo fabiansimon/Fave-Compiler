@@ -111,7 +111,9 @@ static InterpretResult run() {
             printf(" ]");
         }
         printf("\n");
-        disassemble_instruction(&frame->function->chunk, (int)(frame->ip - frame->function->chunk.code));
+        disassemble_instruction(&frame->function->chunk,
+                               (int)(frame->ip - frame->function->chunk.code));
+
 #endif
 
         uint8_t instruction;
